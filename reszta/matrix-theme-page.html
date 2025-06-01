@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Matrix Theme</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00FF41;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .matrix-container {
+            text-align: center;
+            perspective: 1000px;
+        }
+        .matrix-text {
+            font-size: 2rem;
+            transform: rotateX(45deg);
+            animation: matrix-rain 3s linear infinite;
+        }
+        @keyframes matrix-rain {
+            0% { opacity: 0; transform: translateY(-100px) rotateX(45deg); }
+            100% { opacity: 1; transform: translateY(100px) rotateX(45deg); }
+        }
+        .glitch-text {
+            position: relative;
+            color: #00FF41;
+            text-shadow: 0 0 10px #00FF41;
+        }
+        .glitch-text::before {
+            content: attr(data-text);
+            position: absolute;
+            left: 2px;
+            text-shadow: -2px 0 red;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(41px, 9999px, 52px, 0); }
+            5% { clip: rect(33px, 9999px, 44px, 0); }
+            10% { clip: rect(46px, 9999px, 57px, 0); }
+            15% { clip: rect(38px, 9999px, 49px, 0); }
+            20% { clip: rect(35px, 9999px, 46px, 0); }
+            25% { clip: rect(42px, 9999px, 53px, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-container">
+        <h1 class="glitch-text" data-text="WITAJ W MATRIX">WITAJ W MATRIX</h1>
+        <div class="matrix-text">
+            0 1 0 1 1 0 0 1 0<br>
+            1 0 1 0 0 1 1 0 1<br>
+            0 1 1 0 1 0 0 1 0
+        </div>
+    </div>
+
+    <script>
+        function createMatrixRain() {
+            const canvas = document.createElement('canvas');
+            canvas.style.position = 'fixed';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.zIndex = '-1';
+            document.body.appendChild(canvas);
+
+            const context = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const characters = '01';
+            const fontSize = 16;
+            const columns = canvas.width / fontSize;
+
+            const drops = Array(Math.floor(columns)).fill(1);
+
+            function drawMatrix() {
+                context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+
+                context.fillStyle = '#00FF41';
+                context.font = fontSize + 'px monospace';
+
+                for (let i = 0; i < drops.length; i++) {
+                    const text = characters.charAt(Math.floor(Math.random() * characters.length));
+                    context.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+
+            setInterval(drawMatrix, 50);
+        }
+
+        createMatrixRain();
+    </script>
+</body>
+</html>

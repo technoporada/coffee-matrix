@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix | Witaj w Realnym Świecie</title>
+    <style>
+        /* Globalne style */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #0f0;
+            overflow-x: hidden;
+            height: 100%;
+        }
+
+        /* Kontener główny */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Nagłówek */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #0f0;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: bold;
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            color: #0f0;
+            text-decoration: none;
+            font-size: 1.2rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: #fff;
+            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+        }
+
+        nav ul li a:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            background: #0f0;
+            bottom: -5px;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover:after {
+            width: 100%;
+        }
+
+        /* Sekcja główna */
+        .hero {
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        /* Przyciski */
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: transparent;
+            color: #0f0;
+            border: 1px solid #0f0;
+            font-size: 1.2rem;
+            text-decoration: none;
+            letter-spacing: 2px;
+            margin: 10px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+            transform: translateY(-3px);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* Sekcja funkcji */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .feature-box {
+            border: 1px solid #0f0;
+            padding: 30px;
+            text-align: center;
+            background: rgba(0, 20, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .feature-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+        }
+
+        .feature-box h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-box p {
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        /* Stopka */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid #0f0;
+            margin-top: 50px;
+        }
+
+        footer p {
+            font-size: 1rem;
+        }
+
+        /* Animacja deszczu matriksowego */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.7;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        /* Pulsujący efekt */
+        @keyframes pulse {
+            0% {
+                text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+            }
+            50% {
+                text-shadow: 0 0 15px #0f0, 0 0 30px #0f0;
+            }
+            100% {
+                text-shadow: 0 0 10px #0f0, 0 0 20px #0f0;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Responsywność */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+                padding: 0;
+            }
+            
+            nav ul li {
+                margin: 10px 0;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Tło Matrix -->
+    <div class="matrix-bg">
+        <canvas id="matrix"></canvas>
+    </div>
+
+    <!-- Główna zawartość -->
+    <div class="container">
+        <header>
+            <div class="logo">MATRIX</div>
+            <nav>
+                <ul>
+                    <li><a href="#">Strona Główna</a></li>
+                    <li><a href="#">O Nas</a></li>
+                    <li><a href="#">Usługi</a></li>
+                    <li><a href="#">Projekty</a></li>
+                    <li><a href="#">Kontakt</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <section class="hero">
+            <h1 class="pulse">Witaj w Realnym Świecie</h1>
+            <p>Wybierz niebieską pigułkę — historia kończy się, budzisz się w swoim łóżku i wierzysz w co chcesz wierzyć. Wybierz czerwoną pigułkę — zostań w Krainie Czarów, a ja pokażę Ci, jak głęboka jest królicza nora.</p>
+            <div>
+                <a href="#" class="btn">CZERWONA PIGUŁKA</a>
+                <a href="#" class="btn">NIEBIESKA PIGUŁKA</a>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature-box">
+                <h3>Trenuj Umysł</h3>
+                <p>Nie myśl, że możesz, wiedz, że możesz. Twój umysł jest kluczem do przekraczania granic matrixa.</p>
+            </div>
+            <div class="feature-box">
+                <h3>Poznaj Prawdę</h3>
+                <p>Matrix jest wszędzie. Jest wokół nas, nawet teraz w tym pokoju. Odkryj jego tajemnice.</p>
+            </div>
+            <div class="feature-box">
+                <h3>Uwolnij Potencjał</h3>
+                <p>Nie ma łyżki. To nie łyżka się zgina, to ty się zginasz. Odkryj swój prawdziwy potencjał.</p>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2025 The Matrix. Wszystkie prawa zastrzeżone.</p>
+            <p>"Niestety, nikt nie może dowiedzieć się, czym jest Matrix. Musisz sam to zobaczyć."</p>
+        </footer>
+    </div>
+
+    <!-- Skrypt deszczu Matrix -->
+    <script>
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Znaki do wyświetlenia
+        const matrixChars = "アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        
+        // Tablica przechowująca pozycję Y dla każdej kolumny
+        const drops = [];
+        
+        // Inicjalizacja pozycji dla każdej kolumny
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * canvas.height;
+        }
+
+        // Funkcja rysująca deszcz matrix
+        function drawMatrix() {
+            // Lekkie przyciemnienie tła dla efektu śladu
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#0f0'; // Zielony kolor znaków
+            ctx.font = fontSize + 'px monospace';
+            
+            // Pętla rysująca znaki
+            for (let i = 0; i < drops.length; i++) {
+                // Losowy znak do wyświetlenia
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                
+                // x = i * szerokość_znaku, y = wartość dla danej kolumny
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                // Przywrócenie pozycji Y po osiągnięciu dołu
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                
+                // Przesunięcie w dół
+                drops[i]++;
+            }
+        }
+
+        // Uruchomienie animacji
+        setInterval(drawMatrix, 35);
+
+        // Dostosowanie rozmiaru okna
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Resetowanie drops przy zmianie rozmiaru
+            for (let i = 0; i < canvas.width / fontSize; i++) {
+                if (!drops[i]) drops[i] = Math.random() * canvas.height;
+            }
+        });
+    </script>
+</body>
+</html>
